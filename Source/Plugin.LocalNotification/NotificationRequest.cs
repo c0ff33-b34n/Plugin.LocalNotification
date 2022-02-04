@@ -184,5 +184,32 @@ namespace Plugin.LocalNotification
 
             return Schedule.RepeatType != NotificationRepeat.No;
         }
+
+        internal bool IsStillActiveForScheduleAndNonRepeating()
+        {
+            // NotifyTime does not change for Repeat request
+            if (Schedule.NotifyTime is null)
+            {
+                return false;
+            }
+
+            if (Schedule.NotifyAutoCancelTime != null &&
+               Schedule.NotifyAutoCancelTime <= DateTime.Now)
+            {
+                return false;
+            }
+
+            if (Schedule.RepeatType != NotificationRepeat.No)
+            {
+                return false;
+            }
+
+            if (Schedule.AndroidIsValidNotifyTime == false)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
